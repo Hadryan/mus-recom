@@ -20,3 +20,12 @@ WITH SUM(x.created_at * y.created_at) AS xyDotProduct,
  p1, p2
 MERGE (p1)-[s:SIMILARITY]-(p2)
 SET s.similarity = xyDotProduct / (xLength * yLength);
+
+
+MATCH (b:people)-[r:listens]->(m:music), (b)-[s:SIMILARITY]-(a:people {id:581}) 
+WHERE NOT exists ((a)-[l:listens]->(m)) 
+WITH m, s.similarity AS similarity, r.created_at AS rating ORDER BY m.id, similarity DESC 
+WITH m.id AS song_id, rating
+WITH song_id, COLLECT(rating) AS ratings 
+WITH song_id, 1.0 / length(ratings) AS reco ORDER BY reco DESC 
+RETURN song_id AS song_id, reco AS recommendation;
