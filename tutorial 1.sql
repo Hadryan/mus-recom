@@ -12,3 +12,11 @@ match (p:people)-[l:LISTENS]->(m:Music)
 return p.id, m.id, count(l) as listens
 order by listens desc
 limit 5;
+
+MATCH (p1:people)-[x:Listens]->(s:music)<-[y:listens]-(p2:people)
+WITH SUM(x.created_at * y.created_at) AS xyDotProduct,
+ SQRT(x.created_at^2) AS xLength,
+ SQRT(x.created_at^2) AS yLength,
+ p1, p2
+MERGE (p1)-[s:SIMILARITY]-(p2)
+SET s.similarity = xyDotProduct / (xLength * yLength);
