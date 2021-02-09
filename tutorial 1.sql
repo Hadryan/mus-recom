@@ -29,3 +29,15 @@ WITH m.id AS song_id, rating
 WITH song_id, COLLECT(rating) AS ratings 
 WITH song_id, 1.0 / length(ratings) AS reco ORDER BY reco DESC 
 RETURN song_id AS song_id, reco AS recommendation;
+
+                                    
+MATCH (c:people)-[l:listens]->(p:music)
+WITH c, count(l) as total
+MATCH (c)-[:listens]->(p:music)
+WITH c, total, p, count(p.acousticness) as orders
+with c, total, p, orders, round(orders*1000.0/total)/1000.0 as rating
+MERGE (c)-[rated:RATED {
+		   total_count: total, order_count: orders, rating: rating
+		   }]->(p)
+		                                       
+                                    
