@@ -48,4 +48,13 @@ limit 100;
 MATCH (p1:people)-[l1:listens]->(m1:music)
 MATCH (p2:people)-[l2:listens]->(m2:music)
 WHERE m2 <> m1 AND (m2.acousticness / m1.acousticness) > 0.9
-Return m1.id as m1, m2.id as m2, p1.id as p1, p2.id as p2, (m1.acousticness - m2.acousticness) as diff  order by diff desc limit 10	   
+Return m1.id as m1, m2.id as m2, p1.id as p1, p2.id as p2, (m1.acousticness - m2.acousticness) as diff  order by diff desc limit 10	
+	   
+-- acousticness difference is less than 10%	   
+MATCH (p1:people)-[l1:listens]->(m1:music)
+MATCH (m2:music)
+WHERE p1.id = 1 AND m2 <> m1 AND (m2.acousticness - m1.acousticness) < 0.1
+Return distinct id(m1), id(m2), m1.id as m1, m2.id as m2, abs(m1.acousticness - m2.acousticness) as diff  order by diff asc limit 1000
+	   
+	   
+	   
