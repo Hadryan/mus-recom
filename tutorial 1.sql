@@ -40,4 +40,12 @@ MERGE (c)-[rated:RATED {
 		   total_count: total, order_count: orders, rating: rating
 		   }]->(p)
 		                                       
-                                    
+MATCH path = (c:people)-[r:RATED]->(p:music)
+RETURN c.id as user, r.total_count, p.id as music, r.order_count, r.rating, path
+limit 100;
+	   
+-- not very useful	   
+MATCH (p1:people)-[l1:listens]->(m1:music)
+MATCH (p2:people)-[l2:listens]->(m2:music)
+WHERE m2 <> m1 AND (m2.acousticness / m1.acousticness) > 0.9
+Return m1.id as m1, m2.id as m2, p1.id as p1, p2.id as p2, (m1.acousticness - m2.acousticness) as diff  order by diff desc limit 10	   
