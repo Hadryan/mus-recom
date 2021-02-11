@@ -79,3 +79,12 @@ where m1.id = 2283 AND m2.id = 542 AND m2 <> m1
 With p1, l1, m1, m2, ((m1.acousticness * m2.acousticness) + (m1.liveness * m1.liveness)) as similarity, ( sqrt((m1.acousticness + m1.liveness)^2) * sqrt((m1.acousticness + m1.liveness)^2) ) as jazr
 with p1, l1, m1, m2, similarity, jazr , similarity / jazr as shebahat
 Return distinct id(m1), id(m2), m1.id as m1, m2.id as m2, similarity, jazr, shebahat,  abs(m1.acousticness - m2.acousticness) as diff  order by shebahat desc limit 100	   
+	   
+// Scaling
+MATCH (p:music)
+WITH max(p.speechiness) as speechiness_max, min(p.speechiness) AS speechiness_min
+WITH speechiness_min, speechiness_max - speechiness_min as speechiness_diff
+match (p1:music) 
+where p1.id = 2357
+WITH (p1.speechiness - speechiness_min) / speechiness_diff as speechiness_scaled
+return speechiness_scaled	   
