@@ -88,3 +88,13 @@ match (p1:music)
 where p1.id = 2357
 WITH (p1.speechiness - speechiness_min) / speechiness_diff as speechiness_scaled
 return speechiness_scaled	   
+
+MATCH (p:music)
+WITH max(p.speechiness) as speechiness_max, min(p.speechiness) AS speechiness_min, max(p.duration_ms) as duration_max, min(p.duration_ms) AS duration_min
+WITH speechiness_min, duration_min, speechiness_max - speechiness_min as speechiness_diff, duration_max - duration_min AS duration_diff
+match (p1:music) 
+where p1.id = 542
+WITH (p1.speechiness - speechiness_min) * 1.0 / speechiness_diff as speechiness_scaled, (p1.duration_ms - duration_min) * 1.0 / duration_diff as duration_scaled
+return *
+	   
+	   
