@@ -82,19 +82,13 @@ Return distinct id(m1), id(m2), m1.id as m1, m2.id as m2, similarity, jazr, sheb
 	   
 // Scaling
 MATCH (p:music)
-WITH max(p.speechiness) as speechiness_max, min(p.speechiness) AS speechiness_min
-WITH speechiness_min, speechiness_max - speechiness_min as speechiness_diff
-match (p1:music) 
-where p1.id = 2357
-WITH (p1.speechiness - speechiness_min) / speechiness_diff as speechiness_scaled
-return speechiness_scaled	   
-
-MATCH (p:music)
-WITH max(p.speechiness) as speechiness_max, min(p.speechiness) AS speechiness_min, max(p.duration_ms) as duration_max, min(p.duration_ms) AS duration_min
-WITH speechiness_min, duration_min, speechiness_max - speechiness_min as speechiness_diff, duration_max - duration_min AS duration_diff
-match (p1:music) 
-where p1.id = 542
-WITH (p1.speechiness - speechiness_min) * 1.0 / speechiness_diff as speechiness_scaled, (p1.duration_ms - duration_min) * 1.0 / duration_diff as duration_scaled
-return *
-	   
+WITH max(p.speechiness) as speechiness_max, min(p.speechiness) AS speechiness_min, max(p.duration_ms) as duration_max, min(p.duration_ms) AS duration_min,
+		max(p.loudness) as loudness_max, min(p.loudness) AS loudness_min, max(p.tempo) as tempo_max, min(p.tempo) AS tempo_min
+WITH speechiness_min, duration_min, loudness_min, tempo_min, speechiness_max - speechiness_min as speechiness_diff,
+		duration_max - duration_min AS duration_diff, loudness_max - loudness_min AS loudness_diff, tempo_max - tempo_min AS tempo_diff 
+MATCH (p1:music) 
+WHERE p1.id = 542
+WITH (p1.speechiness - speechiness_min) * 1.0 / speechiness_diff as speechiness_scaled, (p1.duration_ms - duration_min) * 1.0 / duration_diff as duration_scaled,
+		(p1.loudness - loudness_min) * 1.0 / loudness_diff as loudness_scaled, (p1.tempo - tempo_min) * 1.0 / tempo_diff as tempo_scaled
+RETURN *
 	   
