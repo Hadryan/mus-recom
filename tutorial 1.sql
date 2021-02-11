@@ -5,6 +5,16 @@
 -- The Northwind Graph provides us with a rich dataset, but primarily we're interested in Customers and their Orders.   In a Graph, the data is modelled like so:
 -- image::https://raw.githubusercontent.com/adam-cowley/northwind-neo4j/master/product-model.png[]
 
+SET graph_path = sample02_graph;
+
+MATCH (v:music)
+where id(v) = 4.4
+set v."key"= 6,  v."mode"= 1,    v."tempo"= 153.902,    v."energy"= 0.354, v."valence"= 0.792, 
+v."liveness"= 0.381,    v."loudness"= -9.486,     v."duration_ms"= 126464, 
+v."speechiness"= 0.0543,     v."acousticness"=  0.595,     v."danceability"= 0.766, 
+v."time_signature"= 4,     v."instrumentalness"= 0;
+
+
 -- ### Popular Products
 -- To find the most popular products in the dataset, we can follow the path from `:Customer` to `:Product`
 
