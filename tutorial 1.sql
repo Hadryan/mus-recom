@@ -55,6 +55,17 @@ MATCH (p1:people)-[l1:listens]->(m1:music)
 MATCH (m2:music)
 WHERE p1.id = 1 AND m2 <> m1 AND (m2.acousticness - m1.acousticness) < 0.1
 Return distinct id(m1), id(m2), m1.id as m1, m2.id as m2, abs(m1.acousticness - m2.acousticness) as diff  order by diff asc limit 1000
+	
+-- with id	   
+MATCH (p1:people)-[l1:listens]->(m1:music)
+MATCH (m2:music)
+WHERE p1.id = 581 AND m1.id = 1431 AND m2 <> m1 AND abs(m2.acousticness - m1.acousticness) < 0.1
+Return distinct id(m1), id(m2), m1.id as m1, m2.id as m2, abs(m1.acousticness - m2.acousticness) as diff  order by diff asc limit 1000	   
 	   
 	   
-	   
+MATCH (p1:people)-[l1:listens]->(m1:music)
+MATCH (m2:music)
+where m1.id = 2283 AND m2.id = 542 AND m2 <> m1
+With p1, l1, m1, m2, ((m1.acousticness * m2.acousticness) + (m1.liveness * m1.liveness)) as similarity, ( sqrt((m1.acousticness + m1.liveness)^2) * sqrt((m1.acousticness + m1.liveness)^2) ) as jazr
+with p1, l1, m1, m2, similarity, jazr , similarity / jazr as shebahat
+Return distinct id(m1), id(m2), m1.id as m1, m2.id as m2, similarity, jazr, shebahat,  abs(m1.acousticness - m2.acousticness) as diff  order by shebahat desc limit 100	   
